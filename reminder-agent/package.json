@@ -1,0 +1,10 @@
+{
+  "name": "reminder-agent",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Cross-platform reminder agent workflow",
+  "scripts": {
+    "capture-reply": "node ./scripts/capture-reply.mjs"
+  }
+}
