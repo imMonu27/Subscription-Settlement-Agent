@@ -15,9 +15,9 @@ This folder contains all files related to the bill reminder agent.
 
 This reminder agent is now designed so that the **sending workflow is agent-native**:
 
-- OpenClaw cron schedules an isolated agent run
-- the agent reads/writes the files in `reminder-agent/data/`
-- the agent sends messages through OpenClaw tools
+- OpenClaw cron schedules a reminder workflow
+- the workflow reads/writes the files in `reminder-agent/data/`
+- the workflow sends Telegram DMs directly through OpenClaw from the running session
 - reply capture remains a small Node hook/script
 
 This avoids platform-specific dependencies like PowerShell or shell-specific CLI invocation.
@@ -35,6 +35,8 @@ This avoids platform-specific dependencies like PowerShell or shell-specific CLI
 You can manually execute the reminder workflow by instructing an isolated agent run to follow:
 
 - `reminder-agent/instructions/send-reminders.md`
+
+The important part of the test is verifying that the run performs a real Telegram send for each unpaid friend and only then updates `paid_status.csv`.
 
 You can test reply capture with:
 

@@ -7,11 +7,11 @@ Purpose: send monthly bill reminders, track replies, and keep reminder-related f
 This reminder agent is designed to be cross-platform by making reminder sending **agent-native**.
 
 That means:
-- OpenClaw cron triggers an isolated agent run
+- OpenClaw cron triggers the reminder workflow
 - the agent reads and updates files directly
-- the agent sends reminder messages using OpenClaw tool access
-- no PowerShell dependency
-- no shell-specific reminder-send path
+- the agent sends reminder messages using a real OpenClaw Telegram delivery path available in that runtime
+- no fake success based on workflow completion alone
+- no PowerShell dependency for the delivery decision itself
 
 ## Files
 

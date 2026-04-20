@@ -8,27 +8,28 @@ This reminder agent should have a cron job for monthly reminders.
 - Meaning: run at 10:00 AM on day 1 of every month
 - Timezone: `Asia/Calcutta`
 
-## Cross-platform design
+## Correct architecture
 
-Cron should trigger an **isolated agent run**, not a shell script.
-
-That isolated run should:
+Cron should trigger a reminder workflow that does all of the following:
 - read `reminder-agent/instructions/send-reminders.md`
-- follow the workflow using files in `reminder-agent/data/`
-- send reminders through OpenClaw tooling
-- update `reminder-agent/data/paid_status.csv`
+- operate only on files inside `reminder-agent/`
+- send Telegram reminders through a real OpenClaw delivery path available in the runtime
+- update `reminder-agent/data/paid_status.csv` only after confirmed send success
 
-## Why this is the preferred architecture
+## Important note about delivery
 
-This avoids dependence on:
-- PowerShell
-- bash/zsh differences
-- local CLI wrapper behavior
-- OS-specific process execution quirks
+Do not rely on cron `announce` delivery or an implicit Telegram channel for these reminders.
 
-## Current cron job
+Why:
+- cron job success only means the run completed
+- cron delivery errors like `Channel is required` or `Delivering to Telegram requires target <chatId>` do not send the bill reminders
+- the actual reminder path must be performed explicitly by the workflow using `sessions_send`
 
-The existing cron job should conceptually do this:
-- run an isolated reminder-agent turn
-- operate only in `reminder-agent/`
-- send monthly reminders and update state
+## Current failure mode that was observed
+
+Earlier runs completed or partially completed while:
+- updating `paid_status.csv`
+- not actually delivering Telegram reminders
+- failing with delivery/channel configuration errors
+
+That means the workflow must treat `sessions_send` success as the real send confirmation.
